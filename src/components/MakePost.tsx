@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./MakePost.css";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewPost, getAllPost } from "../store/reducers/reducer";
+import { Link } from "react-router-dom";
 export default function MakePost() {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.reducer.posts);
+  const data = useSelector((state: any) => state.reducer.posts);
   let id = 1;
   if (data[data.length - 1]?.id) {
     id = data[data.length - 1].id + 1;
@@ -17,7 +18,8 @@ export default function MakePost() {
     image: "",
     type: "",
     state: "",
-    check: "hoat dong",
+    check: "",
+    date: "",
   });
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,12 +44,14 @@ export default function MakePost() {
       image: "",
       type: "",
       state: "",
-      check: "hoat dong",
+      check: "",
+      date: "",
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="make-post-container">
+      <Link to={"/"}>Man hinh shop</Link>
       <p>Ten bai viet</p>
       <input
         type="text"
@@ -69,6 +73,24 @@ export default function MakePost() {
         value={formData.type}
         onChange={handleInput}
       />
+      <p>Ngay viet</p>
+      <input
+        type="date"
+        name="date"
+        value={formData.date}
+        onChange={handleInput}
+      />
+
+      <p>Trang thai</p>
+      <select onChange={handleInput} name="check" id="check">
+        <option value="Hoat dong" selected disabled>
+          Chon
+        </option>
+        <option value="Khong hoat dong">Không hoạt động</option>
+        <option value="Ngung san xuat">Ngừng sản xuất</option>
+        <option value="Hoat dong">Hoat dong</option>
+      </select>
+
       <p>Noi dung</p>
       <input
         type="text"

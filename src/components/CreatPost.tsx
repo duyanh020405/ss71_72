@@ -1,23 +1,52 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changePost, getAllPost } from "../store/reducers/reducer";
-import { useEffect } from "react";
+import { changePost, deletePost, getAllPost } from "../store/reducers/reducer";
+import { useEffect, useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
-
+import { Link } from "react-router-dom";
+import './Creat.css'
+import ChuY from "./ChuY";
 export default function CreatPost() {
   const data: any = useSelector((state) => state);
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
+  
   useEffect(() => {
-    dispath(getAllPost());
-  }, []);
+    dispatch(getAllPost());
+  }, [dispatch]);
 
   console.log(data.reducer.posts);
-  const changeCheck =(item:any)=>{
-     dispath(changePost(item))
+
+  const changeCheck = (item:any) => {
+    console.log(item);
+    
+    const newName = window.prompt("Enter new name:", item.name);
+    const newImage = window.prompt("Enter new image URL:", item.image);
+    const newType = window.prompt("Enter new type:", item.type);
+    const newState = window.prompt("Enter new state:", item.state);
+    
+    
+    const newPost = {
+      ...item,
+      name: newName || item.name,
+      image: newImage || item.image,
+      type: newType || item.type,
+      state: newState || item.state,
+    };
+    
+    dispatch(changePost(newPost));
+  };
+  const handleDelPost = (item:any) => {
+    let confirmDel = window.confirm("bạn có muốn xóa hay không");
+    if (confirmDel) {
+      dispatch(deletePost(item));
+      console.log(item);
+    }
   }
 
   return (
     <div>
+      <ChuY></ChuY>
+         <Link to={'/creatPost'}>Tao bai post</Link>
       <h2>Danh sach cac san pham </h2>
       <table border={1}>
         <thead>
@@ -40,19 +69,20 @@ export default function CreatPost() {
                 <td>
                   <img
                     style={{ position: "relative", width: 200 }}
-                    src={`${item.image}`}
-                    alt=""
+                    src={item.image}
+                    alt={item.name}
                   />
                 </td>
                 <td>{item.type}</td>
-                <td>27/06/2024</td>
+                <td>{item.date}</td>
                 <td>{item.check}</td>
                 <td>
-                  <button onClick={()=>changeCheck(item)} style={{ color: "lightgreen" }}>
-                    <IoEyeSharp></IoEyeSharp>
+                  <button onClick={() => changeCheck(item)} style={{ color: "lightgreen" }}>
+                    <IoEyeSharp />
                   </button>
-                  <button style={{ color: "red" }}>
-                    <MdDelete></MdDelete>
+                  <button onClick={() => handleDelPost(item.id)} style={{ color: "red" }}>
+                    
+                    <MdDelete />
                   </button>
                 </td>
               </tr>
